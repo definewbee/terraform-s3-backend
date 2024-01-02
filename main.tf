@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "ap-southeast-1"
+}
+
 data "aws_region" "current" {}
 
 resource "random_string" "rand" {
@@ -11,23 +15,23 @@ locals {
 }
 
 resource "aws_resourcegroups_group" "resourcegroups_group" {
-    name = "${local.namespace}-group"
+  name = "${local.namespace}-group"
 
-    resource_query {
-      query = <<-JSON
-      {
-        "ResourceTypeFilters": [
-          "AWS::AllSupported"
-        ],
-        "TagFilters": [
-          {
-            "Key": "ResourceGroup"
-            "Values": ["$[local.namespace]"]
-          }
-        ]}
-       }
-       JSON
+  resource_query {
+    query = <<-JSON
+{
+  "ResourceTypeFilters": [
+    "AWS::AllSupported"
+  ],
+  "TagFilters": [
+    {
+      "Key": "ResourceGroup",
+      "Values": ["${local.namespace}"]
     }
+  ]
+}
+  JSON
+  }
 }
 
 resource "aws_kms_key" "kms_key" {
